@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -26,7 +27,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksTo
  */
 public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ExpansionHubEx hub;
-    private ExpansionHubMotor leftFront, leftRear, rightRear, rightFront;
+    private ExpansionHubMotor leftFront, leftBack, rightBack, rightFront;
     private List<ExpansionHubMotor> motors;
     private BNO055IMU imu;
 
@@ -50,11 +51,11 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
         leftFront = hardwareMap.get(ExpansionHubMotor.class, "leftFront");
-        leftRear = hardwareMap.get(ExpansionHubMotor.class, "leftRear");
-        rightRear = hardwareMap.get(ExpansionHubMotor.class, "rightRear");
+        leftBack = hardwareMap.get(ExpansionHubMotor.class, "leftBack");
+        rightBack = hardwareMap.get(ExpansionHubMotor.class, "rightBack");
         rightFront = hardwareMap.get(ExpansionHubMotor.class, "rightFront");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        motors = Arrays.asList(leftFront, leftBack, rightBack, rightFront);
 
         for (ExpansionHubMotor motor : motors) {
             // TODO: decide whether or not to use the built-in velocity PID
@@ -65,9 +66,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-
+               leftBack.setDirection(DcMotor.Direction.REVERSE);
+               rightFront.setDirection(DcMotor.Direction.REVERSE);
         // TODO: set the tuned coefficients from DriveVelocityPIDTuner if using RUN_USING_ENCODER
-        // setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, ...);
+         setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDCoefficients());
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
@@ -107,8 +109,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
         leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
+        leftBack.setPower(v1);
+        rightBack.setPower(v2);
         rightFront.setPower(v3);
     }
 
