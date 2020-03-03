@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
+import com.qualcomm.hardware.motors.NeveRest40Gearmotor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 /*
@@ -18,7 +19,7 @@ public class DriveConstants {
      * adjust them in the dashboard; **config variable changes don't persist between app restarts**.
      */
     private static final MotorConfigurationType MOTOR_CONFIG =
-            MotorConfigurationType.getMotorType(NeveRest20Gearmotor.class);
+            MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class);
     private static final double TICKS_PER_REV = MOTOR_CONFIG.getTicksPerRev();
 
     /*
@@ -30,8 +31,8 @@ public class DriveConstants {
      * convenience.
      */
     public static double WHEEL_RADIUS = 2;
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 1;
+    public static double GEAR_RATIO = 0.6; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 10.55;
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -52,8 +53,8 @@ public class DriveConstants {
      * forces acceleration-limited profiling).
      */
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(
-            30.0, 30.0, 0.0,
-            Math.toRadians(180.0), Math.toRadians(180.0), 0.0
+            52, 52, 0,
+            Math.toRadians(240.0), Math.toRadians(240.0), 0
     );
 
 

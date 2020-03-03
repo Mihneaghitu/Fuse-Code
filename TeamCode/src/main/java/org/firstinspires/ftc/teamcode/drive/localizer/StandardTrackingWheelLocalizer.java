@@ -5,8 +5,12 @@ import android.support.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
+import com.qualcomm.hardware.motors.NeveRest40Gearmotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,8 +31,10 @@ import java.util.List;
  */
 @Config
 public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 1;
-    public static double WHEEL_RADIUS = 2; // in
+    private static final MotorConfigurationType MOTOR_CONFIG =
+            MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class);
+    public static double TICKS_PER_REV = MOTOR_CONFIG.getTicksPerRev();
+    public static double WHEEL_RADIUS = DriveConstants.WHEEL_RADIUS; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double LATERAL_DISTANCE = 10; // in; distance between the left and right wheels

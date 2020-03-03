@@ -27,17 +27,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.Tests;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import java.util.List;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Robot.HardwareConfig_roti_negre;
+
+import java.util.List;
 
 /**
  * This 2019-2020 OpMode illustrates the basics of using the TensorFlow Object Detection API to
@@ -50,12 +52,11 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
-@Disabled
-public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
+
+public class Test_Webcam extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
-
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -69,9 +70,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY =
-            " AdH+fOf/////AAABmdAPFiAA0UkHg0wrxd6vkF2HtfaXeSQ+TQdw15u05/xF5Ic5vxE8DcJ0azg55zUkyWKic8DCzvfTQArVre8JVcWzdkCxxBDJYJba0Ks1CDAshM6fuoxNOHbfExHpL0dQZJA7DNTEg0Fvkg3ogfnN3tNgn6JTfgjmWySShIOD6RjW+7hJ251c8LBTHJCAvTbKVGGulNBgjwO+w1bj+9/oBSA1QGISIYBWIEYpM+smYt0LamOjUVHFPmWcmIT6g/NgfhU7IfDxR2DbXHsSxvOIo0fFJCwbiHE/jgTbd8s6oHBOIgFZe9Fs/yJ/GmJZixpsl1zP049X6rnW73wzZvh6puxTXdultfbdEn8nCEzaYAiu ";
-
+    private static final String VUFORIA_KEY ="AdH+fOf/////AAABmdAPFiAA0UkHg0wrxd6vkF2HtfaXeSQ+TQdw15u05/xF5Ic5vxE8DcJ0azg55zUkyWKic8DCzvfTQArVre8JVcWzdkCxxBDJYJba0Ks1CDAshM6fuoxNOHbfExHpL0dQZJA7DNTEg0Fvkg3ogfnN3tNgn6JTfgjmWySShIOD6RjW+7hJ251c8LBTHJCAvTbKVGGulNBgjwO+w1bj+9/oBSA1QGISIYBWIEYpM+smYt0LamOjUVHFPmWcmIT6g/NgfhU7IfDxR2DbXHsSxvOIo0fFJCwbiHE/jgTbd8s6oHBOIgFZe9Fs/yJ/GmJZixpsl1zP049X6rnW73wzZvh6puxTXdultfbdEn8nCEzaYAiu";
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
@@ -86,8 +85,11 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        HardwareConfig_roti_negre robot = new HardwareConfig_roti_negre();
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
+        robot.init(hardwareMap);
+        robot.led.enableLed(true);
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -107,8 +109,9 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
-        waitForStart();
+        tfod.setClippingMargins(40,180,105,0);
 
+        waitForStart();
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 if (tfod != null) {
@@ -127,6 +130,9 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                                 recognition.getRight(), recognition.getBottom());
                       }
                       telemetry.update();
+                      for (Recognition recognition:updatedRecognitions){
+                          
+                      }
                     }
                 }
             }
@@ -147,7 +153,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "camera porno");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -162,7 +168,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minimumConfidence = 0.8;
+       tfodParameters.minimumConfidence = 0.4;
        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }

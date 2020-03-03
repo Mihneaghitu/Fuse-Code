@@ -27,13 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Robot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.Robot.HardwareConfig_roti_negre;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -50,12 +49,16 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Muie Matei", group="Pushbot")
+@TeleOp(name="Rupem Tot", group="Pushbot")
 
-public class Mecanum_Drive extends OpMode{
+public class Mecanum_Drive_roti_negre extends OpMode{
 
     /* Declare OpMode members. */
-     HardwareConfig robot = new HardwareConfig();
+     private HardwareConfig_roti_negre robot = new HardwareConfig_roti_negre();
+     double coeff = .8;
+    private boolean highSpeed= true;
+    private double LB,LF,RF,RB;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -92,27 +95,46 @@ public class Mecanum_Drive extends OpMode{
         double drive;
         double turn;
         double strafe;
+        double ruleta;
 
-
-        drive = -gamepad1.left_stick_y;
+        drive  = -gamepad1.left_stick_y;
         strafe = gamepad1.left_stick_x;
-        turn = gamepad1.right_stick_x;
+        turn   = gamepad1.right_stick_x;
+        ruleta = -gamepad2.right_stick_y;
 
-        double LB,LF,RF,RB;
+
         LB = -drive + strafe - turn;
         LF = -drive - strafe - turn;
         RB = -drive - strafe + turn;
         RF = -drive + strafe + turn;
 
-        robot.leftBack.setPower(LB);
-        robot.leftFront.setPower(LF);
-        robot.rightFront.setPower(RF);
-        robot.rightBack.setPower(RB);
+        /*
+        LB*=coeff;
+        LF*=coeff;
+        RB*=coeff;
+        RF*=coeff;
+        */
+
+        if(gamepad1.x){
+            highSpeed = false;
+        }else if(gamepad1.b){
+            highSpeed = true;
+        }
+
+        if( !highSpeed ){
+            lower_power( 0.45 );
+        }
+
+        robot.leftBack.setPower(LB*coeff);
+        robot.leftFront.setPower(LF*coeff);
+        robot.rightFront.setPower(RF*coeff);
+        robot.rightBack.setPower(RB*coeff);
+
         // suptere
-        if(gamepad1.left_trigger>0.1){
+        if(gamepad2.left_trigger>0.1){
             robot.suptStanga.setPower(1);
             robot.suptDreapta.setPower(-1);
-        }else if(gamepad1.right_trigger>0.1){
+        }else if(gamepad2.right_trigger>0.1){
             robot.suptStanga.setPower(-1);
             robot.suptDreapta.setPower(1);
         }else{
@@ -120,23 +142,73 @@ public class Mecanum_Drive extends OpMode{
             robot.suptDreapta.setPower(0);
         }
         //intors placa supt
-        if(gamepad1.b){
-            robot.intorsPlaca.setPower(0.6);
-        }else if(gamepad1.x){
-            robot.intorsPlaca.setPower(-0.6);
+        if(gamepad2.x){
+            robot.intorsPlaca.setPower(0.5);
+        }else if(gamepad2.b){
+            robot.intorsPlaca.setPower(-0.75);
         }else{
             robot.intorsPlaca.setPower(0);
         }
 
         //ridicat glisiere
-        if(gamepad1.y){
-            robot.glisiere.setPower(0.45);
-        }else if(gamepad1.a){
-            robot.glisiere.setPower(-0.45);
+        if(gamepad2.dpad_up){
+            robot.glisiere.setPower(-1);
+        }else if(gamepad2.dpad_down){
+            robot.glisiere.setPower(0.7);
         }else{
             robot.glisiere.setPower(0);
         }
 
+        if(gamepad2.left_bumper){
+            robot.intoarcere.setPosition(1);
+        }else if(gamepad2.right_bumper){
+            robot.intoarcere.setPosition(0.21);
+        }
+
+        if(gamepad2.dpad_left){
+            robot.prins.setPosition(0.43);
+        }else if(gamepad2.dpad_right){
+            robot.prins.setPosition(0.65);
+        }
+
+        if(gamepad1.dpad_left){
+            robot.prins_fundatie_stg.setPosition(0);//corect
+            robot.prins_fundatie_dr.setPosition(0.6);
+        }else if(gamepad1.dpad_right){
+            robot.prins_fundatie_stg.setPosition(0.8);//corect
+            robot.prins_fundatie_dr.setPosition(0);
+        }
+
+     /*   if(gamepad1.a){
+            robot.claw.setPosition(0.6);
+        }else if(gamepad1.y){
+            robot.claw.setPosition(0.1);
+        }
+
+        if(gamepad1.right_bumper){
+            robot.brat.setPosition(0);
+        }else if(gamepad1.left_bumper){
+            robot.brat.setPosition(1);
+        }
+       */
+        robot.parcare.setPower(ruleta);
+        if(gamepad2.a){
+            robot.capstone.setPosition(0);
+        }else if(gamepad2.y){
+            robot.capstone.setPosition(1);
+        }
+        //pentru 2 miscari deodata
+        /*
+        if(gamepad2.dpad_right){
+            robot.prins.setPosition(0.8);
+            sleep(50);
+            robot.intoarcere.setPosition(0.7);
+            sleep(50);
+        }else if(gamepad2.dpad_left){
+            robot.prins.setPosition(0);
+            sleep(50);
+            robot.intoarcere.setPosition(0);
+        }  */
 
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
@@ -150,4 +222,17 @@ public class Mecanum_Drive extends OpMode{
     @Override
     public void stop() {
     }
+
+    private void lower_power(double gain){
+        LB *= gain;
+        LF *= gain;
+        RB *= gain;
+        RF *= gain;
+    }
+    private void sleep(int milis){
+        try {
+            Thread.sleep(milis);
+        } catch (Exception e){e.printStackTrace();}
+    }
+
 }

@@ -27,14 +27,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Robot;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
+
+import java.security.CryptoPrimitive;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,19 +60,31 @@ import java.util.List;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class HardwareConfig
+public class HardwareConfig_roti_negre
 {
     /* Public OpMode members. */
-    public DcMotor  leftBack    = null;
-    public DcMotor  leftFront   = null;
-    public DcMotor  rightFront  = null;
-    public DcMotor  rightBack   = null;
-    public DcMotor  suptStanga  = null;
-    public DcMotor  suptDreapta = null;
-    public DcMotor  intorsPlaca = null;
-    public DcMotor  glisiere    = null;
+    public DcMotor   leftBack           = null;
+    public DcMotor   leftFront          = null;
+    public DcMotor   rightFront         = null;
+    public DcMotor   rightBack          = null;
+    public DcMotor   suptStanga         = null;
+    public DcMotor   suptDreapta        = null;
+    public DcMotor   intorsPlaca        = null;
+    public DcMotor   glisiere           = null;
+    public BNO055IMU imu                = null;
+    public Servo     prins              = null;
+    public Servo     intoarcere         = null;
+    public Servo     prins_fundatie_dr  = null;
+    public Servo     prins_fundatie_stg = null;
+    public Servo     brat               = null;
+    public Servo     claw               = null;
+    public CRServo   parcare            = null;
+    public ColorSensor led              = null;
+    public Servo     capstone           = null;
 
     public List<DcMotor> motoare;
+    public List<Servo> servouri;
+    public List<CRServo> crservouri;
     public Servo  ghiara =null;
 
     /* local OpMode members. */
@@ -74,7 +92,7 @@ public class HardwareConfig
     private ElapsedTime period  =  new ElapsedTime();
 
     /* Constructor */
-    public HardwareConfig(){
+    public HardwareConfig_roti_negre(){
 
     }
 
@@ -84,14 +102,25 @@ public class HardwareConfig
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftBack  = hwMap.get(DcMotor.class, "left_back");
-        leftFront = hwMap.get(DcMotor.class, "left_front");
-        rightFront = hwMap.get(DcMotor.class, "right_front");
-        rightBack = hwMap.get(DcMotor.class, "right_back");
-        suptDreapta =hwMap.get(DcMotor.class, "supt_dreapta");
-        suptStanga =hwMap.get(DcMotor.class, "supt_stanga");
-        intorsPlaca =hwMap.get(DcMotor.class, "intors_placa");
-        glisiere  =  hwMap.get(DcMotor.class, "glisiere");
+        leftBack           = hwMap.get(DcMotor.class, "left_back");
+        leftFront          = hwMap.get(DcMotor.class, "left_front");
+        rightFront         = hwMap.get(DcMotor.class, "right_front");
+        rightBack          = hwMap.get(DcMotor.class, "right_back");
+        suptDreapta        = hwMap.get(DcMotor.class, "supt_dreapta");
+        suptStanga         = hwMap.get(DcMotor.class, "supt_stanga");
+        intorsPlaca        = hwMap.get(DcMotor.class, "intors_placa");
+        glisiere           = hwMap.get(DcMotor.class, "glisiere");
+        imu                = hwMap.get(BNO055IMU.class, "imu");
+        prins              = hwMap.get(Servo.class, "prins");
+        //prinsstg    = hwMap.get(CRServo.class, "prinsdr");
+        intoarcere         = hwMap.get(Servo.class, "intoarcere");
+        prins_fundatie_dr  = hwMap.get(Servo.class,"prins_fundatie_dr");
+        prins_fundatie_stg = hwMap.get(Servo.class,"prins_fundatie_stg");
+        parcare            = hwMap.get(CRServo.class, "parcare");
+        brat               = hwMap.get(Servo.class, "brat");
+        claw               = hwMap.get(Servo.class, "claw");
+        led                = hwMap.get(ColorSensor.class, "led");
+        capstone           = hwMap.get(Servo.class,"capstone");
 
         leftBack.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         leftFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
@@ -101,12 +130,15 @@ public class HardwareConfig
         suptDreapta.setDirection(DcMotor.Direction.FORWARD);
         intorsPlaca.setDirection(DcMotor.Direction.FORWARD);
         glisiere.setDirection(DcMotor.Direction.FORWARD);
+        //prinsdr.setDirection(CRServo.Direction.FORWARD);
+        //prinsstg.setDirection(CRServo.Direction.REVERSE);
 
-        motoare = Arrays.asList(leftBack,leftFront,rightBack,rightFront,suptDreapta,suptStanga,intorsPlaca,glisiere);
-
+        motoare  = Arrays.asList(leftBack,leftFront,rightBack,rightFront,suptDreapta,suptStanga,intorsPlaca,glisiere);
+        servouri = Arrays.asList(intoarcere,prins,prins_fundatie_stg,prins_fundatie_dr,brat,claw);
+        //crservouri = Arrays.asList(prinsdr,prinsstg);
         // Define and initialize ALL installed servos
 
-        for(DcMotor motor:motoare){
+        for (DcMotor motor: motoare){
             // Set all motors to zero power
             motor.setPower(0);
             // Set all motors to run without encoders.
@@ -115,6 +147,20 @@ public class HardwareConfig
             //Set zero power behavior
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+
+        //for (Servo servo : servouri){
+          //  servo.setPosition(0.5);
+        //}
+        intoarcere.setPosition(0.21);
+        prins_fundatie_dr.setPosition(0);
+        prins_fundatie_stg.setPosition(0.8);
+        claw.setPosition(0);
+        brat.setPosition(.4);
+       /* for (CRServo crservo : crservouri){
+            crservo.setPower(0);
+        } */
+       parcare.setPower(0);
+
     }
  }
 
