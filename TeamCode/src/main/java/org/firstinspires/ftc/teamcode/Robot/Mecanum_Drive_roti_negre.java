@@ -55,7 +55,7 @@ public class Mecanum_Drive_roti_negre extends OpMode{
 
     /* Declare OpMode members. */
      private HardwareConfig_roti_negre robot = new HardwareConfig_roti_negre();
-     double coeff = .8;
+     double coeff = 1;
     private boolean highSpeed= true;
     private double LB,LF,RF,RB;
 
