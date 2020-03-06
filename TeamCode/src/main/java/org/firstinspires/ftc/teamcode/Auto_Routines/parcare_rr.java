@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.Path;
 import com.acmerobotics.roadrunner.path.QuinticSpline;
 import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
+import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.acmerobotics.roadrunner.path.heading.SplineInterpolator;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -30,7 +31,7 @@ public class parcare_rr extends LinearOpMode {
 
      Trajectory trajectory = robot.trajectoryBuilder()
              .forward(DISTANCE)
-
+             //.lineTo(new Vector2d(25,25),new ConstantInterpolator(Math.toRadians(0)))
              .build();
 
         waitForStart();

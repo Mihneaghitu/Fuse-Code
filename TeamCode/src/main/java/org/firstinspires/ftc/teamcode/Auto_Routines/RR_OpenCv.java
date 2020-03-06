@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Auto_Routines;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 import com.acmerobotics.roadrunner.path.heading.SplineInterpolator;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -29,8 +30,10 @@ public class RR_OpenCv extends LinearOpMode {
     public static double DISTANCE = 30;
     private OpenCvWebcam webcam;
     private SkystoneDetector skystoneDetector;
-    public static double yellow = 100;
+    public static double yellow = 110;
+            //100
     public static int gray = 40;
+        //40
     public static String position = null;
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -66,6 +69,7 @@ public class RR_OpenCv extends LinearOpMode {
 
         if (isStopRequested()) return;
         position = detecteaza(robot);
+        position = "mijloc";
         runtime.reset();
         if(position == "dreapta") tr_dr(robot);
         else if(position == "mijloc") tr_mij(robot);
@@ -96,22 +100,75 @@ public class RR_OpenCv extends LinearOpMode {
 
     }
     public void tr_mij(SampleMecanumDriveREVOptimized robot){
+        Trajectory traj0 = robot.trajectoryBuilder()
+                .reverse()
+                .strafeLeft(30)
+                .reverse()
+                .back(10)
+                .strafeLeft(5.5)
+                .build();
+        Trajectory traj1 = robot.trajectoryBuilder()
+                .reverse()
+                .splineTo(new Pose2d(-30, -17.5, Math.toRadians(5)))
+                .splineTo(new Pose2d(-75, 10, -Math.toRadians(15)))
+                .reverse()
+                .strafeLeft(7.5)
+                .build();
+        Trajectory traj2 = robot.trajectoryBuilder()
+                .strafeRight(5)
+                .forward(75)
+                .addMarker(()->{
+                    robot.brat.setPosition(0.04);
+                    return null;
+                })
+                .splineTo(new Pose2d(145,5, Math.toRadians(-5)))
+                .build();
+        robot.prins_fundatie_stg.setPosition(0.8);//corect
+        robot.prins_fundatie_dr.setPosition(0);
+        robot.brat.setPosition(0.06);
+        robot.claw.setPosition(0.5);//in sus
+        sleep(500);
+        robot.followTrajectorySync(traj0);
+        sleep(400);
+        robot.claw.setPosition(0);
+        sleep(700);
+        robot.brat.setPosition(0.5);
+        sleep(200);
+        robot.followTrajectorySync(traj1);
+        robot.brat.setPosition(0.05);
+        sleep(200);
+        robot.claw.setPosition(0.6);
+        robot.brat.setPosition(0.5);
+        sleep(600);
+        robot.followTrajectorySync(traj2);
 
     }
     public void tr_stg(SampleMecanumDriveREVOptimized robot){
         Trajectory traj0 = robot.trajectoryBuilder()
-                .back(6.5)
-                .strafeLeft(54)
+                .back(2)
+                .addMarker(()->{
+                    sleep(200);
+                    return null;
+                })
+                .strafeLeft(47)
                 .build();
         Trajectory traj1 = robot.trajectoryBuilder()
                 .reverse()
-                .strafeRight(6)
+                .addMarker(()->{
+                    sleep(200);
+                    return null;
+                })
+                .strafeRight(2.2)
                 .reverse()
-                .back(137)
-                .strafeLeft(11.5)
+                .back(102)
+                .addMarker(()->{
+                    sleep(200);
+                    return null;
+                })
+                .strafeLeft(20)
                 .build();
         Trajectory traj2 = robot.trajectoryBuilder()
-                .strafeRight(2.5)
+                .strafeRight(10)
                 .forward(100)
                 .addMarker(()->{
                     robot.brat.setPosition(0);
@@ -119,14 +176,18 @@ public class RR_OpenCv extends LinearOpMode {
                     robot.claw.setPosition(0.5);
                     return null;
                 })
-                .forward(69)
+                .forward(44)
                 .build();
         Trajectory traj3 = robot.trajectoryBuilder()
-                .strafeLeft(5.75)
+                .strafeLeft(5)
                 .build();
         Trajectory traj4 = robot.trajectoryBuilder()
-                .strafeRight(3.5)
-                .back(158)
+                .strafeRight(5)
+                .back(125)
+                .addMarker(()->{
+                    sleep(200);
+                    return null;
+                })
                 .strafeLeft(9.5)
                 .build();
         Trajectory traj5 = robot.trajectoryBuilder()
@@ -141,14 +202,22 @@ public class RR_OpenCv extends LinearOpMode {
                 .build();
         Trajectory traj8 = robot.trajectoryBuilder()
                 .forward(2)
+                .addMarker(()->{
+                    sleep(200);
+                    return null;
+                })
                 .strafeLeft(40)
                 .back(25)
+                .addMarker(()->{
+                    sleep(200);
+                    return null;
+                })
                 .strafeLeft(20)
                 .build();
 
         robot.prins_fundatie_stg.setPosition(0.8);//corect
         robot.prins_fundatie_dr.setPosition(0);
-        robot.brat.setPosition(0);
+        robot.brat.setPosition(0.06);
         robot.claw.setPosition(0.5);//in sus
         sleep(500);
         robot.followTrajectorySync(traj0);

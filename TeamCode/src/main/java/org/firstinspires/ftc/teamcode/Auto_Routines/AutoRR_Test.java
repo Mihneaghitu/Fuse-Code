@@ -166,10 +166,8 @@ public class AutoRR_Test extends LinearOpMode {
 
     private String detecteaza(){
         boolean ok = false;
-        String x1 = null;
-        String x2 = null;
-        double px1 = 0;
-        double px2 = 0;
+        String x1 = null, x2 = null;
+        double px1 = 0, px2 = 0;
         runtime.reset();
         while( runtime.seconds() < 1.5 ){
             if( tfod!=null ){
@@ -185,13 +183,10 @@ public class AutoRR_Test extends LinearOpMode {
                         x2  = updatedRecognitions.get(1).getLabel();
                         px1 = updatedRecognitions.get(0).getLeft();
                         px2 = updatedRecognitions.get(1).getLeft();
-
                     }
-
                 }
             }
         }
-
         if( !ok ) return "dreapta";
         else{
             if( x2 == LABEL_SECOND_ELEMENT ){

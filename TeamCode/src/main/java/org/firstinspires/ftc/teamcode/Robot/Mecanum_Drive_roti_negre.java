@@ -151,6 +151,16 @@ public class Mecanum_Drive_roti_negre extends OpMode{
         }
 
         //ridicat glisiere
+        if (gamepad2.a){
+            robot.intoarcere.setPosition(0.35);
+            sleep(400);
+            robot.capstone.setPosition(1);
+        }else if(gamepad2.y){
+            robot.capstone.setPosition(0);
+            sleep(300);
+            robot.intoarcere.setPosition(0.21);
+        }
+
         if(gamepad2.dpad_up){
             robot.glisiere.setPower(-1);
         }else if(gamepad2.dpad_down){
